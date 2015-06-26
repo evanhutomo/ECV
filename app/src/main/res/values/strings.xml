@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ECV</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_temp_result">ECV form</string>
+
+    <string name="leaf_type_prompt">Choose leaf type</string>
+    <string-array name="leaf_type">
+        <item>...</item>
+        <item>Soybean</item>
+        <item>Rice</item>
+        <item>Corn</item>
+        <item>Cassava</item>
+        <item>Ground nut</item>
+        <item>Yam</item>
+    </string-array>
+</resources>

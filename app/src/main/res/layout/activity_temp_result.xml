@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:paddingTop="20dp"
+        android:orientation="vertical"
+        >
+        <ImageView
+            android:id="@+id/imgLeafTemp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="temporary picture after taken"
+            android:scaleType="centerCrop"
+
+            />
+
+
+        <TextView
+            android:id="@+id/tvECV"
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ECV"
+            android:textSize="15sp"
+            android:textColor="#454545"
+            />
+        <TextView
+            android:id="@+id/tvResultECV"
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1434.90"
+            android:textSize="25sp"
+            android:textColor="#22af87"
+            android:layout_below="@+id/imgLeafTemp"
+            android:layout_toStartOf="@+id/tvLatResult" />
+
+        <TextView
+            android:id="@+id/tvLat"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#454545"
+            android:text="Latitude : "
+            android:textSize="15sp"
+            android:layout_alignTop="@+id/tvLeafType"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/tvLatResult"
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="25sp"
+            android:textColor="#22af87"
+            android:layout_alignTop="@+id/tvLat"
+            android:layout_toEndOf="@+id/tvLong" />
+
+
+
+        <TextView
+            android:id="@+id/tvLong"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvLatResult"
+            android:textColor="#454545"
+            android:text="Longitude : "
+            android:textSize="15sp"
+            />
+
+        <TextView
+            android:id="@+id/tvLongResult"
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/tvLong"
+            android:layout_below="@id/tvLatResult"
+            android:textColor="#22af87"
+            android:text="0"
+            android:textSize="25sp"
+            />
+
+        <TextView
+            android:id="@+id/tvLeafType"
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="Leaf Type"
+            android:textSize="15sp"
+            android:textColor="#454545"
+            android:layout_above="@+id/spnLeaftype"
+            android:layout_alignParentStart="true" />
+
+        <Spinner
+            android:id="@+id/spnLeaftype"
+            android:paddingLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/leaf_type"
+            android:prompt="@string/leaf_type_prompt"
+            android:layout_above="@+id/tvSPAD"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/tvSPAD"
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="SPAD"
+            android:textSize="15sp"
+            android:textColor="#454545"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:id="@+id/etSPAD"
+            android:layout_marginLeft="20dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:numeric="decimal"
+            android:layout_above="@+id/tvNitro"
+            android:layout_alignParentStart="true"
+            android:imeOptions="actionNext"/>
+
+        <TextView
+            android:id="@+id/tvNitro"
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="Nitrogen"
+            android:textSize="15sp"
+            android:textColor="#454545"
+            android:layout_above="@+id/etNitro"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:id="@+id/etNitro"
+            android:layout_marginLeft="20dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:numeric="decimal"
+            android:layout_above="@+id/btnSave"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="27dp"
+            android:imeOptions="actionNext"/>
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SAVE"
+            android:background="#22af87"
+            android:textColor="#fff"
+            android:textSize="25sp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="66dp" />
+    </LinearLayout>
+</ScrollView>
