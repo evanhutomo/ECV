@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // create MATADAUN dir
-        File fileECV = new File(Environment.getExternalStorageDirectory(), "MATADAUN/ECV");
+        File fileECV = new File(Environment.getExternalStorageDirectory(), "MATADAUN/ECV/CSV/");
         if(!fileECV.exists()) {
             fileECV.mkdirs();
         } else {

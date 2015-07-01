@@ -7,10 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +33,11 @@ import com.google.android.gms.location.LocationServices;
 import org.mrcpp.constant.EHConstant;
 import org.mrcpp.other.EHHelper;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class TempResultActivity extends Activity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
@@ -38,6 +47,7 @@ public class TempResultActivity extends Activity
     EditText etNitro;
     ImageView imgview;
     TextView tvResultECV;
+    TextView tvProgress;
     EHConstant ehLeafTitle;
 
     String sleaftype, sspad, snitro, secv, sdate;
@@ -58,6 +68,11 @@ public class TempResultActivity extends Activity
     TextView tvLat, tvLong;
     Double dLat, dLon;
 
+    // bitmap
+    Bitmap bmp, bmpResized;
+    Integer iImgBroadPixel;
+
+    File photoFile = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +95,50 @@ public class TempResultActivity extends Activity
         etNitro = (EditText) findViewById(R.id.etNitro);
         imgview = (ImageView) findViewById(R.id.imgLeafTemp);
         tvResultECV = (TextView) findViewById(R.id.tvResultECV);
+        tvProgress = (TextView) findViewById(R.id.tvProgress);
 
-        Intent iCamera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(iCamera, 0);
+        dispatchTakePictureIntent();
+        //Intent iCamera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        //startActivityForResult(iCamera, 0);
+    }
+
+    String mCurrentPhotoPath;
+    private File createImageFile() throws IOException {
+        //create an image file name
+        String timeStamp = new SimpleDateFormat("yyyy_mm_dd_HHmmss").format(new Date());
+        String imageFilename = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFilename,
+                ".jpg",
+                storageDir
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+
+        return image;
+    }
+    static final int REQUEST_TAKE_PHOTO = 1;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //ensure that there's camera activity to handle the intent
+
+        if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // create the File where the photo should go
+            try {
+                photoFile = createImageFile();
+            } catch(IOException io) {
+
+            }
+
+            //continue
+            if(photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
     }
 
     @Override
@@ -93,14 +149,37 @@ public class TempResultActivity extends Activity
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-            Bitmap bmp = (Bitmap)data.getExtras().get("data");
-            imgview.setImageBitmap(bmp);
+
+            if(photoFile.exists()) {
+                bmpResized = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                bmp = Bitmap.createScaledBitmap(bmpResized, (int) (bmpResized.getWidth() * 0.1), (int) (bmpResized.getHeight() * 0.1), true);
+                iImgBroadPixel = ((int) (bmpResized.getWidth() * 0.1) * (int) (bmpResized.getHeight() * 0.1));
+                imgview.setImageBitmap(bmp);
+                new CountCV().execute("");
+            }
+            //bmp = (Bitmap)data.getExtras().get("data");
+            //Bitmap.createScaledBitmap(bmp, 150, 150, false);
+            //imgview.setImageBitmap(bmp);
+
+            onSaveTheData();
+
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Intent menu = new Intent(TempResultActivity.this, MainActivity.class);
+            startActivity(menu);
+            TempResultActivity.this.finish();
+        }
+    }
+
+    private class CountCV extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
 
             double AvRs=0,AvGs=0,AvBs=0,AvRr=0,AvGr=0,AvBr=0,Er=0,Eg=0,Eb=0,Rfix=0,Gfix=0,Bfix=0;
 
             int jumlahHijau = 0;
             int jumlahPutih = 0;
-            int Rs=0,Gs=0,Bs=0,Rr=0,Gr=0,Br=0;
+            int Rs=0,Gs=0,Bs=0,Rr=0,Gr=0,Br=0, counter = 0;
 
             for(int i = 0;i<bmp.getWidth();i++){
                 for(int j = 0;j<bmp.getHeight();j++){
@@ -118,10 +197,14 @@ public class TempResultActivity extends Activity
                         Br += b;
                         jumlahPutih++;
                     }
+                    counter++;
                 }
+                counter++;
+                publishProgress(counter);
             }
+
             if(jumlahHijau == 0 || jumlahPutih == 0) {
-                AlertDialog.Builder abCSVNull = new AlertDialog.Builder(this);
+                AlertDialog.Builder abCSVNull = new AlertDialog.Builder(TempResultActivity.this);
                 abCSVNull.setMessage("Please arrange camera into the leaf object properly");
                 abCSVNull.setCancelable(true);
                 abCSVNull.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
@@ -154,14 +237,17 @@ public class TempResultActivity extends Activity
             CV = ((Rfix+Gfix+Bfix)/255)*100/3;
             secv = String.valueOf(CV);
 
-            tvResultECV.setText(String.format("%3f", CV));
+            return secv;
+        }
 
-            onSaveTheData();
+        @Override
+        protected void onPostExecute(String s) {
+            tvResultECV.setText(s);
+        }
 
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            Intent menu = new Intent(TempResultActivity.this, MainActivity.class);
-            startActivity(menu);
-            TempResultActivity.this.finish();
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            tvProgress.setText(values[0] + "/" + iImgBroadPixel);
         }
     }
 
@@ -202,7 +288,10 @@ public class TempResultActivity extends Activity
             @Override
             public void onClick(View v) {
                 if (verifyData()) {
-                    Log.i("evanhutomo", "sukses");
+
+                    //save image
+                    ehHelper.saveImageToExternalStorage(bmp, sleaftype, TempResultActivity.this);
+
                     StringBuilder sbFileName = new StringBuilder();
                     sbFileName.append("matadaun_ecv_" + sleaftype + ".csv");
                     sNameFile = sbFileName.toString();
@@ -210,7 +299,7 @@ public class TempResultActivity extends Activity
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-                    ehHelper.writeToCSV2(secv, sleaftype, sspad, snitro, dLat, dLon, sNameFile, "MATADAUN/ECV/", getBaseContext());
+                    ehHelper.writeToCSV2(secv, sleaftype, sspad, snitro, dLat, dLon, sNameFile, "MATADAUN/ECV/CSV/", getBaseContext());
                     btnSave.setText("SAVED!");
                     btnSave.setClickable(false);
                     

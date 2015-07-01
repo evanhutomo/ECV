@@ -1,14 +1,21 @@
 package org.mrcpp.other;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,7 +35,7 @@ public class EHHelper {
     };
 
     public static final String SIMPLE_DATE_FORMAT = "yyyy-MM-dd";
-    public static final String DETAIL_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String DETAIL_DATE_FORMAT = "yyyy_MM_dd_HH_mm_ss";
     public static final String DIR_CSV_MATADAUN = "/MATADAUN/CSV/";
     public static final String DIR_IMG_MATADAUN = "/MATADAUN/IMG/";
 
@@ -37,10 +44,19 @@ public class EHHelper {
         return Character.toUpperCase(sRep.charAt(0)) + sRep.substring(1);
     }
 
-    public String getCurrentTimeStamp() {
+    public String getCurrentTimeStamp(String type) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat(EHHelper.SIMPLE_DATE_FORMAT);
-            return sdf.format(new Date());
+            if(type.equals("simple")) {
+                SimpleDateFormat sdf = new SimpleDateFormat(EHHelper.SIMPLE_DATE_FORMAT);
+                return sdf.format(new Date());
+            } else if(type.equals("detail")) {
+                SimpleDateFormat sdf = new SimpleDateFormat(EHHelper.DETAIL_DATE_FORMAT);
+                return sdf.format(new Date());
+            } else {
+                //simple date for default
+                SimpleDateFormat sdf = new SimpleDateFormat(EHHelper.SIMPLE_DATE_FORMAT);
+                return sdf.format(new Date());
+            }
         } catch (Exception e) {
             return "1900-00-00";
         }
@@ -65,7 +81,7 @@ public class EHHelper {
             try {
                 FileWriter fwWriter = new FileWriter(fileMD, true);
                 fwWriter.write("" + sNameLeaf + ","
-                        + getCurrentTimeStamp() + ","
+                        + getCurrentTimeStamp("simple") + ","
                         + valChlorophyll + ","
                         + valNitrogen + ","
                         + valLat + ","
@@ -95,7 +111,7 @@ public class EHHelper {
             try {
                 FileWriter fwWriter = new FileWriter(fileMD, true);
                 fwWriter.write("" + sNameLeaf + ","
-                        + getCurrentTimeStamp() + ","
+                        + getCurrentTimeStamp("detail") + ","
                         + secv + ","
                         + sspad+ ","
                         + snitro + ","
@@ -109,6 +125,48 @@ public class EHHelper {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    public void saveImageToExternalStorage(Bitmap img, String imgtypename, Context context) {
+        String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/MATADAUN/ECV/IMG/";
+
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(imgtypename + "_" + getCurrentTimeStamp("detail") + ".png");
+        String sNameFileImg = sb.toString();
+        sNameFileImg.replace(" ", "_");
+
+        ContentValues cv = new ContentValues();
+        cv.put(MediaStore.Images.Media.TITLE, sNameFileImg);
+        cv.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
+        cv.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+
+        Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+
+        try {
+            File dir = new File(fullPath);
+            if(!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            OutputStream fOut = context.getContentResolver().openOutputStream(uri);
+
+            //OutputStream fOut = null;
+            File file = new File(fullPath, sNameFileImg);
+            if(file.exists()) {
+                file.delete();
+            }
+
+            file.createNewFile();
+            fOut = new FileOutputStream(file);
+
+            // 100 means no compresion, the lower you go, the stronger the compresion
+            img.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+            Log.e("evan save image", e.getMessage());
         }
     }
 
