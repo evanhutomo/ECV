@@ -21,15 +21,27 @@
             android:layout_alignParentTop="true"
             />
 
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:indeterminate="false"
+            android:max="100"
+
+            android:minWidth="200dp"
+            android:progress="1" />
+
         <TextView
             android:id="@+id/tvProgress"
-            android:layout_marginTop="20dp"
             android:paddingLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="progress.."
             android:textSize="15sp"
-            android:textColor="#76b099"
+            android:textColor="#22af87"
             />
 
         <TextView

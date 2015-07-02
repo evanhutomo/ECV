@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,6 +74,13 @@ public class TempResultActivity extends Activity
     Integer iImgBroadPixel;
 
     File photoFile = null;
+    Button btnSave;
+
+    //progressbar
+    private ProgressBar progressBar;
+
+    //Compression constanta
+    private static final Double KONSTANTA_IMG = 0.3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,13 +97,20 @@ public class TempResultActivity extends Activity
         } else {
             Toast.makeText(this, "Not connected...", Toast.LENGTH_SHORT).show();
         }
+        btnSave = (Button) findViewById(R.id.btnSave);
+        btnSave.setText("WAIT..");
+        btnSave.setEnabled(false);
+        btnSave.setBackgroundColor(Color.LTGRAY);
 
         spnLeafType = (Spinner) findViewById(R.id.spnLeaftype);
         etSPAD = (EditText) findViewById(R.id.etSPAD);
         etNitro = (EditText) findViewById(R.id.etNitro);
         imgview = (ImageView) findViewById(R.id.imgLeafTemp);
         tvResultECV = (TextView) findViewById(R.id.tvResultECV);
+
         tvProgress = (TextView) findViewById(R.id.tvProgress);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+        progressBar.getProgressDrawable().setColorFilter(0xff00be8c, android.graphics.PorterDuff.Mode.SRC_ATOP);
 
         dispatchTakePictureIntent();
         //Intent iCamera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -145,15 +160,16 @@ public class TempResultActivity extends Activity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(resultCode == RESULT_OK){
-            final Button btnSave = (Button) findViewById(R.id.btnSave);
+
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
             if(photoFile.exists()) {
                 bmpResized = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                bmp = Bitmap.createScaledBitmap(bmpResized, (int) (bmpResized.getWidth() * 0.1), (int) (bmpResized.getHeight() * 0.1), true);
-                iImgBroadPixel = ((int) (bmpResized.getWidth() * 0.1) * (int) (bmpResized.getHeight() * 0.1));
+                bmp = Bitmap.createScaledBitmap(bmpResized, (int) (bmpResized.getWidth() * KONSTANTA_IMG), (int) (bmpResized.getHeight() * KONSTANTA_IMG), true);
+                iImgBroadPixel = ((int) (bmpResized.getWidth() * KONSTANTA_IMG) * (int) (bmpResized.getHeight() * KONSTANTA_IMG));
+                progressBar.setMax(iImgBroadPixel);
                 imgview.setImageBitmap(bmp);
                 new CountCV().execute("");
             }
@@ -243,11 +259,15 @@ public class TempResultActivity extends Activity
         @Override
         protected void onPostExecute(String s) {
             tvResultECV.setText(s);
+            btnSave.setText("SAVE");
+            btnSave.setBackgroundColor(Color.parseColor("#22AF87"));
+            btnSave.setEnabled(true);
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
             tvProgress.setText(values[0] + "/" + iImgBroadPixel);
+            progressBar.setProgress(values[0]);
         }
     }
 
@@ -283,7 +303,7 @@ public class TempResultActivity extends Activity
     }
 
     public void onSaveTheData() {
-        final Button btnSave = (Button) findViewById(R.id.btnSave);
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -302,13 +322,10 @@ public class TempResultActivity extends Activity
                     ehHelper.writeToCSV2(secv, sleaftype, sspad, snitro, dLat, dLon, sNameFile, "MATADAUN/ECV/CSV/", getBaseContext());
                     btnSave.setText("SAVED!");
                     btnSave.setClickable(false);
-                    
+                    btnSave.setBackgroundColor(Color.LTGRAY);
                 }
-
             }
         });
-
-
     }
 
     @Override
