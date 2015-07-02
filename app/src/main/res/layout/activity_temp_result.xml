@@ -131,7 +131,7 @@
 
         <Spinner
             android:id="@+id/spnLeaftype"
-            android:paddingLeft="20dp"
+            android:layout_marginLeft="20dp"
             android:entries="@array/leaf_type"
             android:prompt="@string/leaf_type_prompt"
             android:layout_above="@+id/tvSPAD"

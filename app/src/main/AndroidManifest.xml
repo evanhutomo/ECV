@@ -34,6 +34,7 @@
             android:label="@string/title_activity_temp_result"
             android:screenOrientation="portrait"
             android:theme="@style/Base.V11.Theme.AppCompat.Light"
+            android:parentActivityName=".MainActivity"
             >
         </activity>
         <activity

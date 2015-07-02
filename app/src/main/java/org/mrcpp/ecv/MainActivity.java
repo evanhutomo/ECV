@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +35,7 @@ public class MainActivity extends Activity {
         if(!fileECV.exists()) {
             fileECV.mkdirs();
         } else {
-            Log.i("evan", fileECV.toString());
+//            Log.i("evan", fileECV.toString());
         }
 
         LocationManager locationmanager = (LocationManager) getSystemService(LOCATION_SERVICE);
