@@ -190,12 +190,11 @@ public class TempResultActivity extends Activity
 
         @Override
         protected String doInBackground(String... params) {
-
             double AvRs=0,AvGs=0,AvBs=0,AvRr=0,AvGr=0,AvBr=0,Er=0,Eg=0,Eb=0,Rfix=0,Gfix=0,Bfix=0;
-
             int jumlahHijau = 0;
             int jumlahPutih = 0;
             int Rs=0,Gs=0,Bs=0,Rr=0,Gr=0,Br=0, counter = 0;
+            String sCond = "normal";
 
             for(int i = 0;i<bmp.getWidth();i++){
                 for(int j = 0;j<bmp.getHeight();j++){
@@ -220,18 +219,7 @@ public class TempResultActivity extends Activity
             }
 
             if(jumlahHijau == 0 || jumlahPutih == 0) {
-                AlertDialog.Builder abCSVNull = new AlertDialog.Builder(TempResultActivity.this);
-                abCSVNull.setMessage("Please arrange camera into the leaf object properly");
-                abCSVNull.setCancelable(true);
-                abCSVNull.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        TempResultActivity.this.finish();
-                    }
-                });
-
-                AlertDialog ad = abCSVNull.create();
-                ad.show();
+                sCond = "err";
             }
 
             AvRs = Rs / (jumlahHijau-1);
@@ -253,15 +241,35 @@ public class TempResultActivity extends Activity
             CV = ((Rfix+Gfix+Bfix)/255)*100/3;
             secv = String.valueOf(CV);
 
-            return secv;
+            if(sCond.equals("normal")) {
+                sCond = secv;
+            } else if(sCond.equals("err")) {
+                sCond = "err";
+            }
+            return sCond;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            tvResultECV.setText(s);
-            btnSave.setText("SAVE");
-            btnSave.setBackgroundColor(Color.parseColor("#22AF87"));
-            btnSave.setEnabled(true);
+            if(!s.equals("err")) {
+                tvResultECV.setText(s);
+                btnSave.setText("SAVE");
+                btnSave.setBackgroundColor(Color.parseColor("#22AF87"));
+                btnSave.setEnabled(true);
+            } else {
+                AlertDialog.Builder abCSVNull = new AlertDialog.Builder(TempResultActivity.this);
+                abCSVNull.setMessage("Please arrange camera into the leaf object properly");
+                abCSVNull.setCancelable(true);
+                abCSVNull.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TempResultActivity.this.finish();
+                    }
+                });
+
+                AlertDialog ad = abCSVNull.create();
+                ad.show();
+            }
         }
 
         @Override
