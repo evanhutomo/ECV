@@ -22,7 +22,7 @@
         android:src="@android:drawable/ic_menu_camera"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:background="#bf3456"
+        android:background="#22af87"
         />
 
     <TextView

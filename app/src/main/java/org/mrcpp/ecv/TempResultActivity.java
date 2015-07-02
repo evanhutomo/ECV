@@ -173,11 +173,6 @@ public class TempResultActivity extends Activity
                 imgview.setImageBitmap(bmp);
                 new CountCV().execute("");
             }
-            //bmp = (Bitmap)data.getExtras().get("data");
-            //Bitmap.createScaledBitmap(bmp, 150, 150, false);
-            //imgview.setImageBitmap(bmp);
-
-            onSaveTheData();
 
         } else if (resultCode == Activity.RESULT_CANCELED) {
             Intent menu = new Intent(TempResultActivity.this, MainActivity.class);
@@ -256,6 +251,8 @@ public class TempResultActivity extends Activity
                 btnSave.setText("SAVE");
                 btnSave.setBackgroundColor(Color.parseColor("#22AF87"));
                 btnSave.setEnabled(true);
+                tvProgress.setText("done!");
+                onSaveTheData();
             } else {
                 AlertDialog.Builder abCSVNull = new AlertDialog.Builder(TempResultActivity.this);
                 abCSVNull.setMessage("Please arrange camera into the leaf object properly");
@@ -274,7 +271,7 @@ public class TempResultActivity extends Activity
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            tvProgress.setText(values[0] + "/" + iImgBroadPixel);
+            tvProgress.setText("calculating..");
             progressBar.setProgress(values[0]);
         }
     }
