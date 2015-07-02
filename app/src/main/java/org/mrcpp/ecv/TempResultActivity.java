@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 public class TempResultActivity extends Activity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
@@ -49,6 +48,7 @@ public class TempResultActivity extends Activity
     TextView tvResultECV;
     TextView tvProgress;
     EHConstant ehLeafTitle;
+
 
     String sleaftype, sspad, snitro, secv, sdate;
     Double CV;
