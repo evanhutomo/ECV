@@ -169,6 +169,8 @@ public class TempResultActivity extends ActionBarActivity
 
 
             if(photoFile.exists()) {
+
+                //recycle after use
                 bmpResized = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 bmp = Bitmap.createScaledBitmap(bmpResized, (int) (bmpResized.getWidth() * KONSTANTA_IMG), (int) (bmpResized.getHeight() * KONSTANTA_IMG), true);
                 if(bmpResized !=bmp) {
