@@ -80,7 +80,7 @@ public class TempResultActivity extends ActionBarActivity
     private ProgressBar progressBar;
 
     //Compression constanta
-    private static final Double KONSTANTA_IMG = 0.3;
+    private static final Double KONSTANTA_IMG = 0.1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +171,10 @@ public class TempResultActivity extends ActionBarActivity
             if(photoFile.exists()) {
                 bmpResized = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 bmp = Bitmap.createScaledBitmap(bmpResized, (int) (bmpResized.getWidth() * KONSTANTA_IMG), (int) (bmpResized.getHeight() * KONSTANTA_IMG), true);
+                if(bmpResized !=bmp) {
+                    bmpResized.recycle();
+                }
+
                 iImgBroadPixel = ((int) (bmpResized.getWidth() * KONSTANTA_IMG) * (int) (bmpResized.getHeight() * KONSTANTA_IMG));
                 progressBar.setMax(iImgBroadPixel);
                 imgview.setImageBitmap(bmp);
@@ -218,26 +222,27 @@ public class TempResultActivity extends ActionBarActivity
 
             if(jumlahHijau == 0 || jumlahPutih == 0) {
                 sCond = "err";
+            } else {
+                AvRs = Rs / (jumlahHijau-1);
+                AvGs = Gs / (jumlahHijau-1);
+                AvBs = Bs / (jumlahHijau-1);
+
+                AvRr = Rr / (jumlahPutih-1);
+                AvGr = Gr / (jumlahPutih-1);
+                AvBr = Br / (jumlahPutih-1);
+
+                Er = 255-AvRr ;
+                Eg = 255-AvGr ;
+                Eb = 255-AvBr ;
+
+                Rfix = AvRs + Er;
+                Gfix = AvGs + Eg;
+                Bfix = AvBs + Eb;
+
+                CV = ((Rfix+Gfix+Bfix)/255)*100/3;
+                secv = String.valueOf(CV);
             }
 
-            AvRs = Rs / (jumlahHijau-1);
-            AvGs = Gs / (jumlahHijau-1);
-            AvBs = Bs / (jumlahHijau-1);
-
-            AvRr = Rr / (jumlahPutih-1);
-            AvGr = Gr / (jumlahPutih-1);
-            AvBr = Br / (jumlahPutih-1);
-
-            Er = 255-AvRr ;
-            Eg = 255-AvGr ;
-            Eb = 255-AvBr ;
-
-            Rfix = AvRs + Er;
-            Gfix = AvGs + Eg;
-            Bfix = AvBs + Eb;
-
-            CV = ((Rfix+Gfix+Bfix)/255)*100/3;
-            secv = String.valueOf(CV);
 
             if(sCond.equals("normal")) {
                 sCond = secv;
@@ -310,6 +315,25 @@ public class TempResultActivity extends ActionBarActivity
         ad.show();
     }
 
+    private void setAllWidgetDisabled(Boolean param) {
+        if(param) {
+            btnSave.setText("SAVED!");
+            btnSave.setClickable(false);
+            btnSave.setBackgroundColor(Color.LTGRAY);
+
+            etNitro.setEnabled(false);
+            etSPAD.setEnabled(false);
+            spnLeafType.setEnabled(false);
+
+            tvResultECV.setTextColor(Color.LTGRAY);
+            tvLat.setTextColor(Color.LTGRAY);
+            tvLong.setTextColor(Color.LTGRAY);
+            tvProgress.setTextColor(Color.LTGRAY);
+            progressBar.getProgressDrawable().setColorFilter(0xffffffff, android.graphics.PorterDuff.Mode.SRC_ATOP);
+        }
+
+    }
+
     public void onSaveTheData() {
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -328,9 +352,7 @@ public class TempResultActivity extends ActionBarActivity
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
                     ehHelper.writeToCSV2(secv, sleaftype, sspad, snitro, dLat, dLon, sNameFile, "MATADAUN/ECV/CSV/", getBaseContext());
-                    btnSave.setText("SAVED!");
-                    btnSave.setClickable(false);
-                    btnSave.setBackgroundColor(Color.LTGRAY);
+                    setAllWidgetDisabled(true);
                 }
             }
         });
