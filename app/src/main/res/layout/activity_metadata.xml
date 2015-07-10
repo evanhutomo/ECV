@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fefefe"
+    >
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:orientation="vertical"
+        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        >
+
+        <ImageView
+            android:id="@+id/imgLeafTemp"
+            android:contentDescription="temporary picture after taken"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="true"
+            />
+
+        <TextView
+            android:id="@+id/tvECV"
+            android:paddingLeft="20dp"
+            android:text="ECV"
+            android:textSize="10sp"
+            android:textColor="#676767"
+            android:layout_width="match_parent"
+            android:background="#eeeeee"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgLeafTemp"
+            android:paddingTop="10dp"
+            />
+
+        <TextView
+            android:id="@+id/tvResultECV"
+            android:paddingLeft="20dp"
+            android:text="0"
+            android:textSize="25sp"
+            android:textColor="#343434"
+            android:background="#eeeeee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgLeafTemp"
+            android:layout_margin="0dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            />
+
+        <TextView
+            android:id="@+id/tvLat"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColor="#676767"
+            android:text="LATITUDE"
+            android:textSize="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/tvLeafType"
+            />
+
+        <TextView
+            android:id="@+id/tvLatResult"
+            android:paddingLeft="20dp"
+            android:text="0"
+            android:textSize="25sp"
+            android:textColor="#343434"
+            android:layout_alignTop="@+id/tvLat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            />
+
+        <TextView
+            android:id="@+id/tvLong"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColor="#676767"
+            android:background="#eeeeee"
+            android:text="LONGITUDE"
+            android:textSize="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvLatResult"
+            />
+
+        <TextView
+            android:id="@+id/tvLongResult"
+            android:paddingLeft="20dp"
+            android:textColor="#343434"
+            android:background="#eeeeee"
+            android:text="0"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tvLong"
+            android:layout_below="@id/tvLatResult"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            />
+
+        <TextView
+            android:id="@+id/tvPxlGreen"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColor="#676767"
+            android:text="AMOUNT OF GREEN PIXEL"
+            android:textSize="10sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvLatResult"
+            />
+
+        <TextView
+            android:id="@+id/tvPxlGreenResult"
+            android:paddingLeft="20dp"
+            android:textColor="#343434"
+            android:text="0"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/tvLong"
+            android:layout_below="@id/tvPxlGreen"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            />
+
+        <TextView
+            android:id="@+id/tvPxlWhite"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColor="#676767"
+            android:background="#eeeeee"
+            android:text="AMOUNT OF GREEN WHITE"
+            android:textSize="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvPxlGreenResult"
+            />
+
+        <TextView
+            android:id="@+id/tvPxlWhiteResult"
+            android:paddingLeft="20dp"
+            android:textColor="#343434"
+            android:background="#eeeeee"
+            android:text="0"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tvLong"
+            android:layout_below="@id/tvPxlWhite"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            />
+
+        <TextView
+            android:id="@+id/tvTotalPixel"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColor="#676767"
+            android:text="TOTAL PIXEL"
+            android:textSize="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/tvTotalPixelResult"
+            android:paddingLeft="20dp"
+            android:textColor="#343434"
+            android:text="0"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            />
+    </LinearLayout>
+</ScrollView>

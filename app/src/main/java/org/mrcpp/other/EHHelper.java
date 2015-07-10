@@ -124,13 +124,12 @@ public class EHHelper {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 
-    public void saveImageToExternalStorage(Bitmap img, String imgtypename, Context context) {
+    public Uri saveImageToExternalStorage(Bitmap img, String imgtypename, Context context) {
+        Uri u;
         String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/MATADAUN/ECV/IMG/";
-
 
         StringBuilder sb = new StringBuilder();
         sb.append(imgtypename + "_" + getCurrentTimeStamp("detail") + ".png");
@@ -154,19 +153,24 @@ public class EHHelper {
 
             //OutputStream fOut = null;
             File file = new File(fullPath, sNameFileImg);
+
             if(file.exists()) {
                 file.delete();
             }
 
             file.createNewFile();
-            fOut = new FileOutputStream(file);
+            u = Uri.fromFile(file);
 
+            fOut = new FileOutputStream(file);
             // 100 means no compresion, the lower you go, the stronger the compresion
             img.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+
             fOut.flush();
             fOut.close();
+            return u;
         } catch (Exception e) {
             Log.e("evan save image", e.getMessage());
+            return null;
         }
     }
 

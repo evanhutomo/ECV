@@ -30,7 +30,6 @@
             android:layout_alignParentTop="true"
             android:indeterminate="false"
             android:max="100"
-
             android:minWidth="200dp"
             android:progress="1" />
 
@@ -71,7 +70,7 @@
             android:id="@+id/tvLat"
             android:paddingLeft="20dp"
             android:textColor="#454545"
-            android:text="Latitude : "
+            android:text="Latitude"
             android:textSize="15sp"
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
@@ -96,7 +95,7 @@
             android:id="@+id/tvLong"
             android:paddingLeft="20dp"
             android:textColor="#454545"
-            android:text="Longitude : "
+            android:text="Longitude"
             android:textSize="15sp"
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
@@ -115,6 +114,56 @@
             android:layout_marginTop="0dp"
             android:layout_toRightOf="@id/tvLong"
             android:layout_below="@id/tvLatResult"
+            />
+
+        <TextView
+            android:id="@+id/tvPxlGreen"
+            android:paddingLeft="20dp"
+            android:textColor="#454545"
+            android:text="Pixel green"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvLatResult"
+            />
+
+        <TextView
+            android:id="@+id/tvPxlGreenResult"
+            android:paddingLeft="20dp"
+            android:textColor="#22af87"
+            android:text="0"
+            android:textSize="25sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/tvLong"
+            android:layout_below="@id/tvPxlGreen"
+            />
+
+        <TextView
+            android:id="@+id/tvPxlWhite"
+            android:paddingLeft="20dp"
+            android:textColor="#454545"
+            android:text="Pixel white"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvPxlGreenResult"
+            />
+
+        <TextView
+            android:id="@+id/tvPxlWhiteResult"
+            android:paddingLeft="20dp"
+            android:textColor="#22af87"
+            android:text="0"
+            android:textSize="25sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/tvLong"
+            android:layout_below="@id/tvPxlWhite"
             />
 
         <TextView
@@ -185,6 +234,19 @@
             />
 
         <Button
+            android:id="@+id/btnMetadata"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="show metadata"
+            android:textSize="25sp"
+            android:background="#dedede"
+            android:textColor="#989898"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:visibility="invisible"
+            />
+
+        <Button
             android:id="@+id/btnSave"
             android:background="#22af87"
             android:text="SAVE"
@@ -194,7 +256,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="66dp"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             />
     </LinearLayout>
 </ScrollView>

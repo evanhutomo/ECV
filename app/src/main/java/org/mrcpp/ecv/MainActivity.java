@@ -8,7 +8,7 @@ import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.mrcpp.other.EHHelper;
@@ -47,11 +47,20 @@ public class MainActivity extends Activity {
         }
 
 
-        ImageButton btnCamera = (ImageButton) findViewById(R.id.btnCamera);
+        Button btnCamera = (Button) findViewById(R.id.btnCamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent iTempResult = new Intent(MainActivity.this, TempResultActivity.class);
+                startActivity(iTempResult);
+            }
+        });
+
+        Button btnAbout = (Button) findViewById(R.id.btnAbout);
+        btnAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iTempResult = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(iTempResult);
             }
         });

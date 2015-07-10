@@ -3,35 +3,56 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity"
+    android:gravity="center_vertical"
+    >
 
     <TextView
-        android:id="@+id/ECVTitle"
+        android:id="@+id/tvECVTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:layout_marginBottom="20dp"
-        android:text="ECV maker"
-        android:layout_above="@+id/btnCamera"
-        android:layout_centerHorizontal="true" />
-
-    <ImageButton
-        android:id="@+id/btnCamera"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@android:drawable/ic_menu_camera"
-        android:layout_centerVertical="true"
+        android:textSize="20sp"
+        android:text="Enhance Color Visibility"
         android:layout_centerHorizontal="true"
-        android:background="#22af87"
+
         />
 
     <TextView
-        android:id="@+id/command"
+        android:id="@+id/tvECVCounterTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:text="click to begin"
-        android:layout_below="@+id/btnCamera"
+        android:textSize="15sp"
+        android:layout_marginBottom="40dp"
+        android:text="Counter"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
+        android:layout_below="@+id/tvECVTitle"
+        />
+
+    <Button
+        android:id="@+id/btnCamera"
+        android:textSize="25dp"
+        android:textColor="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="Start scan"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:background="#22af87"
+        android:layout_below="@+id/tvECVCounterTitle"
+        />
+
+    <Button
+        android:id="@+id/btnAbout"
+        android:layout_marginTop="10dp"
+        android:textSize="25dp"
+        android:textColor="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="about"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:background="#656565"
+        android:layout_below="@+id/btnCamera"
+        />
 </RelativeLayout>

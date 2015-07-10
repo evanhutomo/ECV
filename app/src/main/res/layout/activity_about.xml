@@ -1,0 +1,63 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context="org.mrcpp.matadaun.activity.HelpActivity">
+
+        <ImageView
+            android:id="@+id/ecv_logo"
+            android:src="@drawable/ecv_logo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:id="@+id/mrcpp_logo"
+            android:src="@drawable/logo_mrcpp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/ecv_version"
+            android:layout_marginTop="10dp"
+            />
+
+        <TextView
+            android:id="@+id/ecv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:text="@string/title_about_ecv"
+            android:layout_below="@+id/ecv_logo"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/ecv_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="@string/title_version"
+            android:layout_below="@+id/ecv_title"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/tvdescription"
+            android:text="@string/about_desc"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/mrcpp_logo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </RelativeLayout>
+
+</ScrollView>

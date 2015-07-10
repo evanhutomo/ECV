@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -42,22 +43,24 @@ import java.util.Date;
 public class TempResultActivity extends ActionBarActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
-    Spinner spnLeafType;
-    EditText etSPAD;
-    EditText etNitro;
-    ImageView imgview;
-    TextView tvResultECV;
-    TextView tvProgress;
-    EHConstant ehLeafTitle;
-
-
-    String sleaftype, sspad, snitro, secv, sdate;
-    Double CV;
-
     public TempResultActivity() {
         ehLeafTitle = new EHConstant();
         ehHelper = new EHHelper();
     }
+
+
+    Spinner spnLeafType;
+    EditText etSPAD;
+    EditText etNitro;
+    ImageView imgview;
+
+    TextView tvResultECV, tvPxlGreen, tvPxlWhite, tvProgress;
+    String[] arrData4Metadata = new String[7];
+
+    EHConstant ehLeafTitle;
+
+    String sleaftype, sspad, snitro, secv;
+    Double CV;
 
     // EHHElper ivar
     EHHelper ehHelper;
@@ -71,16 +74,17 @@ public class TempResultActivity extends ActionBarActivity
 
     // bitmap
     Bitmap bmp, bmpResized;
-    Integer iImgBroadPixel;
+    double iImgBroadPixel;
+    String mCurrentPhotoPath;
 
     File photoFile = null;
-    Button btnSave;
+    Button btnSave, btnMetadata;
 
     //progressbar
     private ProgressBar progressBar;
 
     //Compression constanta
-    private static final Double KONSTANTA_IMG = 0.1;
+    private static final Double KONSTANTA_IMG = 0.5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,13 +107,19 @@ public class TempResultActivity extends ActionBarActivity
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setText("WAIT..");
         btnSave.setEnabled(false);
-        btnSave.setBackgroundColor(Color.LTGRAY);
+//        btnSave.setBackgroundColor(Color.LTGRAY);
+
+        btnMetadata = (Button) findViewById(R.id.btnMetadata);
+        btnMetadata.setVisibility(View.GONE);
+        btnMetadata.setEnabled(false);
 
         spnLeafType = (Spinner) findViewById(R.id.spnLeaftype);
         etSPAD = (EditText) findViewById(R.id.etSPAD);
         etNitro = (EditText) findViewById(R.id.etNitro);
         imgview = (ImageView) findViewById(R.id.imgLeafTemp);
         tvResultECV = (TextView) findViewById(R.id.tvResultECV);
+        tvPxlGreen = (TextView) findViewById(R.id.tvPxlGreenResult);
+        tvPxlWhite = (TextView) findViewById(R.id.tvPxlWhiteResult);
 
         tvProgress = (TextView) findViewById(R.id.tvProgress);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
@@ -120,11 +130,17 @@ public class TempResultActivity extends ActionBarActivity
         //startActivityForResult(iCamera, 0);
     }
 
-    String mCurrentPhotoPath;
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        erasedTempFile();
+    }
+
+
     private File createImageFile() throws IOException {
         //create an image file name
         String timeStamp = new SimpleDateFormat("yyyy_mm_dd_HHmmss").format(new Date());
-        String imageFilename = "JPEG_" + timeStamp + "_";
+        String imageFilename = "ecvtemp_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFilename,
@@ -138,6 +154,22 @@ public class TempResultActivity extends ActionBarActivity
         return image;
     }
     static final int REQUEST_TAKE_PHOTO = 1;
+
+    private void dispatchTakePictureGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_TAKE_PHOTO);
+    }
+
+//    public String getPath(Uri uri) {
+//        String[] projection = { MediaStore.Images.Media.DATA };
+//        Cursor cursor = managedQuery(uri, projection, null, null, null);
+//        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//        cursor.moveToFirst();
+//        return cursor.getString(column_index);
+//    }
+
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -159,17 +191,22 @@ public class TempResultActivity extends ActionBarActivity
         }
     }
 
+    private void erasedTempFile() {
+        if(photoFile.exists()) {
+            Log.i("evan deleted", "exist");
+            photoFile.delete();
+        } else {
+            Log.i("evan deleted", "file didnt exist");
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(resultCode == RESULT_OK){
-
-
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
             if(photoFile.exists()) {
-
                 //recycle after use
                 bmpResized = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 bmp = Bitmap.createScaledBitmap(bmpResized, (int) (bmpResized.getWidth() * KONSTANTA_IMG), (int) (bmpResized.getHeight() * KONSTANTA_IMG), true);
@@ -178,25 +215,31 @@ public class TempResultActivity extends ActionBarActivity
                 }
 
                 iImgBroadPixel = ((int) (bmpResized.getWidth() * KONSTANTA_IMG) * (int) (bmpResized.getHeight() * KONSTANTA_IMG));
-                progressBar.setMax(iImgBroadPixel);
+                progressBar.setMax((int) iImgBroadPixel);
                 imgview.setImageBitmap(bmp);
                 new CountCV().execute("");
             }
 
         } else if (resultCode == Activity.RESULT_CANCELED) {
-            Intent menu = new Intent(TempResultActivity.this, MainActivity.class);
-            startActivity(menu);
-            TempResultActivity.this.finish();
+            erasedTempFile();
+            if(!photoFile.exists()) {
+                Log.i("evan deleted", "file already deleted");
+                Intent menu = new Intent(TempResultActivity.this, MainActivity.class);
+                startActivity(menu);
+                TempResultActivity.this.finish();
+            }
         }
     }
+
+    int jumlahHijau = 0;
+    int jumlahPutih = 0;
 
     private class CountCV extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... params) {
             double AvRs=0,AvGs=0,AvBs=0,AvRr=0,AvGr=0,AvBr=0,Er=0,Eg=0,Eb=0,Rfix=0,Gfix=0,Bfix=0;
-            int jumlahHijau = 0;
-            int jumlahPutih = 0;
+
             int Rs=0,Gs=0,Bs=0,Rr=0,Gr=0,Br=0, counter = 0;
             String sCond = "normal";
 
@@ -221,10 +264,14 @@ public class TempResultActivity extends ActionBarActivity
                 counter++;
                 publishProgress(counter);
             }
+            Log.i("evan jumlahhijau", String.valueOf(jumlahHijau));
+            Log.i("evan jumlahputih", String.valueOf(jumlahPutih));
 
-            if(jumlahHijau == 0 || jumlahPutih == 0) {
+            double dAreaPix = (double) (jumlahHijau/iImgBroadPixel) * 100;
+
+            if(dAreaPix < 5.0) {
                 sCond = "err";
-            } else {
+            } else if(dAreaPix >= 5.0 && dAreaPix <= 100.0) {
                 AvRs = Rs / (jumlahHijau-1);
                 AvGs = Gs / (jumlahHijau-1);
                 AvBs = Bs / (jumlahHijau-1);
@@ -243,12 +290,20 @@ public class TempResultActivity extends ActionBarActivity
 
                 CV = ((Rfix+Gfix+Bfix)/255)*100/3;
                 secv = String.valueOf(CV);
+
+                arrData4Metadata[0] = String.valueOf(CV);
+                arrData4Metadata[1] = String.valueOf(dLat);
+                arrData4Metadata[2] = String.valueOf(dLon);
+                arrData4Metadata[3] = String.valueOf(jumlahHijau);
+                arrData4Metadata[4] = String.valueOf(jumlahPutih);
+                arrData4Metadata[5] = String.valueOf(iImgBroadPixel);
+
             }
 
 
             if(sCond.equals("normal")) {
                 sCond = secv;
-            } else if(sCond.equals("err")) {
+            } else {
                 sCond = "err";
             }
             return sCond;
@@ -258,18 +313,24 @@ public class TempResultActivity extends ActionBarActivity
         protected void onPostExecute(String s) {
             if(!s.equals("err")) {
                 tvResultECV.setText(s);
+                tvPxlGreen.setText(String.valueOf(jumlahHijau));
+                tvPxlWhite.setText(String.valueOf(jumlahPutih));
+
                 btnSave.setText("SAVE");
                 btnSave.setBackgroundColor(Color.parseColor("#22AF87"));
                 btnSave.setEnabled(true);
+
                 tvProgress.setText("done!");
                 onSaveTheData();
+                onSeeMetadata();
             } else {
                 AlertDialog.Builder abCSVNull = new AlertDialog.Builder(TempResultActivity.this);
-                abCSVNull.setMessage("Please arrange camera into the leaf object properly");
+                abCSVNull.setMessage("Object is invalid, please take image again.");
                 abCSVNull.setCancelable(true);
                 abCSVNull.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        erasedTempFile();
                         TempResultActivity.this.finish();
                     }
                 });
@@ -331,11 +392,26 @@ public class TempResultActivity extends ActionBarActivity
             tvLat.setTextColor(Color.LTGRAY);
             tvLong.setTextColor(Color.LTGRAY);
             tvProgress.setTextColor(Color.LTGRAY);
+            tvPxlGreen.setTextColor(Color.LTGRAY);
+            tvPxlWhite.setTextColor(Color.LTGRAY);
+
             progressBar.getProgressDrawable().setColorFilter(0xffffffff, android.graphics.PorterDuff.Mode.SRC_ATOP);
         }
 
     }
+    public void onSeeMetadata() {
+        btnMetadata.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iSeeMetadata = new Intent(TempResultActivity.this, MetadataActivity.class);
+                iSeeMetadata.putExtra("metadata", arrData4Metadata);
+                startActivity(iSeeMetadata);
+            }
+        });
+    }
 
+    Uri uriImg;
+    String sImgPath;
     public void onSaveTheData() {
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -344,7 +420,9 @@ public class TempResultActivity extends ActionBarActivity
                 if (verifyData()) {
 
                     //save image
-                    ehHelper.saveImageToExternalStorage(bmp, sleaftype, TempResultActivity.this);
+                    uriImg = ehHelper.saveImageToExternalStorage(bmp, sleaftype, TempResultActivity.this);
+                    sImgPath = uriImg.toString();
+                    arrData4Metadata[6] = String.valueOf(sImgPath);
 
                     StringBuilder sbFileName = new StringBuilder();
                     sbFileName.append("matadaun_ecv_" + sleaftype + ".csv");
@@ -354,7 +432,12 @@ public class TempResultActivity extends ActionBarActivity
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
                     ehHelper.writeToCSV2(secv, sleaftype, sspad, snitro, dLat, dLon, sNameFile, "MATADAUN/ECV/CSV/", getBaseContext());
+                    erasedTempFile();
                     setAllWidgetDisabled(true);
+
+                    btnMetadata.setText("show metadata");
+                    btnMetadata.setVisibility(View.VISIBLE);
+                    btnMetadata.setEnabled(true);
                 }
             }
         });
