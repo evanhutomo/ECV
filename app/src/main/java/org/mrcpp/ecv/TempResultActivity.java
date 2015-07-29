@@ -18,6 +18,8 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -52,14 +54,15 @@ public class TempResultActivity extends ActionBarActivity
     Spinner spnLeafType;
     EditText etSPAD;
     EditText etNitro;
+    EditText etKeterangan;
     ImageView imgview;
 
     TextView tvResultECV, tvPxlGreen, tvPxlWhite, tvProgress;
-    String[] arrData4Metadata = new String[7];
+    String[] arrData4Metadata = new String[8];
 
     EHConstant ehLeafTitle;
 
-    String sleaftype, sspad, snitro, secv;
+    String sleaftype, sspad, snitro, secv, sketerangan;
     Double CV;
 
     // EHHElper ivar
@@ -116,6 +119,7 @@ public class TempResultActivity extends ActionBarActivity
         spnLeafType = (Spinner) findViewById(R.id.spnLeaftype);
         etSPAD = (EditText) findViewById(R.id.etSPAD);
         etNitro = (EditText) findViewById(R.id.etNitro);
+        etKeterangan = (EditText) findViewById(R.id.etKeterangan);
         imgview = (ImageView) findViewById(R.id.imgLeafTemp);
         tvResultECV = (TextView) findViewById(R.id.tvResultECV);
         tvPxlGreen = (TextView) findViewById(R.id.tvPxlGreenResult);
@@ -267,6 +271,7 @@ public class TempResultActivity extends ActionBarActivity
             Log.i("evan jumlahhijau", String.valueOf(jumlahHijau));
             Log.i("evan jumlahputih", String.valueOf(jumlahPutih));
 
+            iImgBroadPixel = jumlahHijau+jumlahPutih;
             double dAreaPix = (double) (jumlahHijau/iImgBroadPixel) * 100;
 
             if(dAreaPix < 5.0) {
@@ -353,7 +358,10 @@ public class TempResultActivity extends ActionBarActivity
         sleaftype = String.valueOf(spnLeafType.getSelectedItem());
         sspad = String.valueOf(etSPAD.getText());
         snitro = String.valueOf(etNitro.getText());
-
+        sketerangan = String.valueOf(etKeterangan.getText());
+        if(sketerangan.equals("")) {
+            sketerangan = "-";
+        }
         if(sleaftype.equals("...")) {
             getErr("Leaf type");
             return false;
@@ -366,7 +374,6 @@ public class TempResultActivity extends ActionBarActivity
         } else {
             return true;
         }
-
 
     }
 
@@ -386,6 +393,7 @@ public class TempResultActivity extends ActionBarActivity
 
             etNitro.setEnabled(false);
             etSPAD.setEnabled(false);
+            etKeterangan.setEnabled(false);
             spnLeafType.setEnabled(false);
 
             tvResultECV.setTextColor(Color.LTGRAY);
@@ -423,6 +431,7 @@ public class TempResultActivity extends ActionBarActivity
                     uriImg = ehHelper.saveImageToExternalStorage(bmp, sleaftype, TempResultActivity.this);
                     sImgPath = uriImg.toString();
                     arrData4Metadata[6] = String.valueOf(sImgPath);
+                    arrData4Metadata[7] = String.valueOf(sketerangan);
 
                     StringBuilder sbFileName = new StringBuilder();
                     sbFileName.append("matadaun_ecv_" + sleaftype + ".csv");
@@ -431,7 +440,7 @@ public class TempResultActivity extends ActionBarActivity
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-                    ehHelper.writeToCSV2(secv, sleaftype, sspad, snitro, dLat, dLon, sNameFile, "MATADAUN/ECV/CSV/", getBaseContext());
+                    ehHelper.writeToCSV2(secv, sleaftype, sspad, snitro, dLat, dLon, sketerangan, sNameFile, "MATADAUN/ECV/CSV/", getBaseContext());
                     erasedTempFile();
                     setAllWidgetDisabled(true);
 
@@ -474,5 +483,28 @@ public class TempResultActivity extends ActionBarActivity
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_temp_result, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent iSeeData = new Intent(getBaseContext(), MiniCalcActivity.class);
+            startActivity(iSeeData);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

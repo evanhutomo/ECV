@@ -97,7 +97,7 @@ public class EHHelper {
         }
     }
 
-    public void writeToCSV2 (String secv, String sleaftype, String sspad, String snitro, Double valLat, Double valLon, String snamefile, String pathroot, Context ccontext) {
+    public void writeToCSV2 (String secv, String sleaftype, String sspad, String snitro, Double valLat, Double valLon, String sketerangan, String snamefile, String pathroot, Context ccontext) {
         if(sleaftype!= null ) {
             String sNameLeaf = EHCapitalize(sleaftype);
 
@@ -116,7 +116,8 @@ public class EHHelper {
                         + sspad+ ","
                         + snitro + ","
                         + valLon + ","
-                        + valLat
+                        + valLat + ","
+                        + sketerangan
                         + System.getProperty("line.separator"));
                 fwWriter.flush();
                 fwWriter.close();

@@ -233,6 +233,30 @@
             android:layout_marginBottom="27dp"
             />
 
+        <TextView
+            android:id="@+id/tvKeterangan"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:text="Additional information"
+            android:textSize="15sp"
+            android:textColor="#454545"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/etKeterangan"
+            />
+
+        <EditText
+            android:id="@+id/etKeterangan"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="27dp"
+            android:layout_above="@+id/btnMetadata"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:imeOptions="actionNext"
+            />
+
         <Button
             android:id="@+id/btnMetadata"
             android:layout_width="match_parent"

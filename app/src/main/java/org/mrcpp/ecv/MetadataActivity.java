@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 
 public class MetadataActivity extends ActionBarActivity {
-    TextView tvECV, tvLat, tvLon, tvGrnPx, tvWhtPx, tvTotPx;
+    TextView tvECV, tvLat, tvLon, tvGrnPx, tvWhtPx, tvTotPx, tvKet;
     ImageView ivImgData;
     String[] arrData = new String[5];
 
@@ -23,6 +23,7 @@ public class MetadataActivity extends ActionBarActivity {
         tvGrnPx = (TextView) findViewById(R.id.tvPxlGreenResult);
         tvWhtPx = (TextView) findViewById(R.id.tvPxlWhiteResult);
         tvTotPx = (TextView) findViewById(R.id.tvTotalPixelResult);
+        tvKet = (TextView) findViewById(R.id.tvKetResult);
         ivImgData = (ImageView) findViewById(R.id.imgLeafTemp);
 
         if(savedInstanceState == null) {
@@ -43,8 +44,11 @@ public class MetadataActivity extends ActionBarActivity {
         tvGrnPx.setText(arrData[3]);
         tvWhtPx.setText(arrData[4]);
         tvTotPx.setText(arrData[5]);
+        tvKet.setText(arrData[7]);
+
         Uri uri = Uri.parse(arrData[6]);
         ivImgData.setImageURI(uri);
+
     }
 
 
